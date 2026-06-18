@@ -1,36 +1,138 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Employee Onboarding System
 
-## Getting Started
+A full-stack web application that manages the complete lifecycle of employee onboarding, keeping HR, IT, and Management in sync.
 
-First, run the development server:
+## Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 16 (App Router, Server Actions) |
+| Backend | NestJS 11 |
+| Database | PostgreSQL |
+| Styling | Tailwind CSS 4 |
+
+## Onboarding Workflow
+
+```
+HR creates request
+       ↓
+Manager reviews + approves Fișa de post
+       ↓
+Finance approves budget (Premium tier only)
+       ↓
+IT provisions email, password, laptop
+       ↓
+Completed ✓
+
+At any stage → Reject → Needs Rework → HR edits → resubmits → restarts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+rinf_tech/
+├── app/                    # Next.js pages & server actions
+│   ├── dashboard/          # All requests + filters + counters
+│   ├── onboarding/
+│   │   ├── new/            # HR create form
+│   │   └── [id]/           # Detail view, audit log, edit
+│   ├── manager/            # Manager review queue
+│   ├── finance/            # Finance approval queue
+│   ├── it/                 # IT provisioning queue
+│   └── actions.ts          # All server actions
+├── components/
+│   ├── layout/             # Navbar
+│   ├── onboarding/         # Feature components
+│   └── ui/                 # Shared UI (Button, Badge, Toast, Pagination)
+├── lib/                    # API helpers, formatDate, constants
+├── types/                  # Shared TypeScript types
+└── backend/                # NestJS application
+    └── src/
+        ├── onboarding/     # Module, controller, service, entities, DTOs
+        └── common/         # Enums
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Prerequisites
 
-## Learn More
+- Node.js 18+
+- PostgreSQL (running on localhost:5432)
 
-To learn more about Next.js, take a look at the following resources:
+## Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 1. Create the database
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+In pgAdmin (or psql), create a database named `onboarding`.
 
-## Deploy on Vercel
+### 2. Configure the backend
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Create or edit `backend/.env`:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_NAME=onboarding
+PORT=3001
+```
+
+### 3. Install dependencies
+
+```bash
+# Frontend
+npm install
+
+# Backend
+cd backend && npm install
+```
+
+### 4. Start the backend
+
+```bash
+cd backend
+npm run start:dev
+```
+
+The backend runs on `http://localhost:3001`. On first start, TypeORM will auto-create all tables (`synchronize: true`).
+
+### 5. Start the frontend
+
+```bash
+# From the rinf_tech root
+npm run dev
+```
+
+The frontend runs on `http://localhost:3000`.
+
+## Environment Variables
+
+### Backend (`backend/.env`)
+
+| Variable | Default | Description |
+|---|---|---|
+| `DB_HOST` | `localhost` | PostgreSQL host |
+| `DB_PORT` | `5432` | PostgreSQL port |
+| `DB_USER` | `postgres` | Database user |
+| `DB_PASSWORD` | — | Database password |
+| `DB_NAME` | `onboarding` | Database name |
+| `PORT` | `3001` | NestJS port |
+
+### Frontend
+
+Create `.env.local` in the project root to override the API URL:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
+## Features
+
+- **Full onboarding lifecycle** — Initiation → Manager → Finance (conditional) → IT → Completion
+- **Rejection loop** — any stage can reject back to HR for rework
+- **Fișa de post** — auto-generated job description modal with PDF download
+- **Audit log** — full activity timeline per request with actor, timestamp, and notes
+- **Urgency flag** — mark requests as urgent; sorted to top of all queues
+- **Approval notes** — optional note when approving, recorded in audit log
+- **IT provisioning** — email pre-filled as `firstname.lastname@rinf.tech`, password generator
+- **Dashboard** — search, filter by status, status counters, pagination (10 per page)
+- **Toast notifications** — success/error feedback on every action
