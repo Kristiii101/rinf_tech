@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from "@nestjs/common";
 import { OnboardingService } from "./onboarding.service";
 import { CreateOnboardingDto } from "./dto/create-onboarding.dto";
 import { UpdateOnboardingDto, ReviewOnboardingDto } from "./dto/review-onboarding.dto";
@@ -56,5 +56,11 @@ export class OnboardingController {
   @Patch(":id/it/reject")
   itReject(@Param("id") id: string, @Body() dto: ReviewOnboardingDto) {
     return this.service.itProvision(id, false, dto as ITProvisionDto);
+  }
+
+  @Delete(":id")
+  @HttpCode(204)
+  remove(@Param("id") id: string) {
+    return this.service.remove(id);
   }
 }

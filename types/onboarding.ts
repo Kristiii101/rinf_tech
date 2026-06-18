@@ -16,7 +16,8 @@ export interface OnboardingRequest {
   hardwareTier: HardwareTier;
   status: OnboardingStatus;
   rejectionReason?: string;
-  generatedEmail?: string;
+  generatedEmail?: string | null;
+  laptopConfig?: string | null;
   createdAt: string;
   updatedAt: string;
 }

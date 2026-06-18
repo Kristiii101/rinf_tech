@@ -31,9 +31,6 @@ export class OnboardingService {
 
   async update(id: string, dto: UpdateOnboardingDto) {
     const req = await this.findOne(id);
-    if (req.status !== OnboardingStatus.NEEDS_REWORK) {
-      throw new BadRequestException("Only requests in NEEDS_REWORK status can be edited");
-    }
     Object.assign(req, dto, { status: OnboardingStatus.PENDING_MANAGER, rejectionReason: null });
     return this.repo.save(req);
   }
@@ -50,7 +47,7 @@ export class OnboardingService {
           : OnboardingStatus.PENDING_IT;
     } else {
       req.status = OnboardingStatus.NEEDS_REWORK;
-      req.rejectionReason = dto.rejectionReason;
+      req.rejectionReason = dto.rejectionReason ?? null;
     }
     return this.repo.save(req);
   }
@@ -64,7 +61,7 @@ export class OnboardingService {
       req.status = OnboardingStatus.PENDING_IT;
     } else {
       req.status = OnboardingStatus.NEEDS_REWORK;
-      req.rejectionReason = dto.rejectionReason;
+      req.rejectionReason = dto.rejectionReason ?? null;
     }
     return this.repo.save(req);
   }
@@ -76,12 +73,17 @@ export class OnboardingService {
     }
     if (approved) {
       req.status = OnboardingStatus.COMPLETED;
-      req.generatedEmail = dto.generatedEmail;
-      req.laptopConfig = dto.laptopConfig;
+      req.generatedEmail = dto.generatedEmail ?? null;
+      req.laptopConfig = dto.laptopConfig ?? null;
     } else {
       req.status = OnboardingStatus.NEEDS_REWORK;
-      req.rejectionReason = dto.rejectionReason;
+      req.rejectionReason = dto.rejectionReason ?? null;
     }
     return this.repo.save(req);
+  }
+
+  async remove(id: string) {
+    const req = await this.findOne(id);
+    await this.repo.remove(req);
   }
 }

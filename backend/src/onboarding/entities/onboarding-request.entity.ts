@@ -27,14 +27,14 @@ export class OnboardingRequest {
   @Column({ type: "enum", enum: OnboardingStatus, default: OnboardingStatus.PENDING_MANAGER })
   status: OnboardingStatus;
 
-  @Column({ nullable: true })
-  rejectionReason: string;
+  @Column({ type: "varchar", nullable: true })
+  rejectionReason: string | null;
 
-  @Column({ nullable: true })
-  generatedEmail: string;
+  @Column({ type: "varchar", nullable: true })
+  generatedEmail: string | null;
 
-  @Column({ nullable: true })
-  laptopConfig: string;
+  @Column({ type: "varchar", nullable: true })
+  laptopConfig: string | null;
 
   @CreateDateColumn()
   createdAt: Date;
