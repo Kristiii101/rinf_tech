@@ -5,6 +5,9 @@ export class ITProvisionDto {
   generatedEmail: string;
 
   @IsString()
+  generatedPassword: string;
+
+  @IsString()
   laptopConfig: string;
 
   @IsString()

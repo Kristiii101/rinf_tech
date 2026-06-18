@@ -1,4 +1,4 @@
-import type { OnboardingRequest, OnboardingStatus } from "@/types/onboarding";
+import type { OnboardingRequest, OnboardingStatus, AuditLogEntry } from "@/types/onboarding";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
@@ -23,4 +23,8 @@ export function getOnboardingRequest(id: string): Promise<OnboardingRequest> {
 
 export function getOnboardingByStatus(status: OnboardingStatus): Promise<OnboardingRequest[]> {
   return getOnboardingRequests().then((list) => list.filter((r) => r.status === status));
+}
+
+export function getAuditLog(requestId: string): Promise<AuditLogEntry[]> {
+  return apiFetch(`/onboarding/${requestId}/audit`);
 }

@@ -8,4 +8,8 @@ export class ReviewOnboardingDto {
   @IsString()
   @IsOptional()
   rejectionReason?: string;
+
+  @IsString()
+  @IsOptional()
+  approvalNote?: string;
 }

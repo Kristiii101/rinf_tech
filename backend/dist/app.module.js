@@ -12,6 +12,7 @@ const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const onboarding_module_1 = require("./onboarding/onboarding.module");
 const onboarding_request_entity_1 = require("./onboarding/entities/onboarding-request.entity");
+const audit_log_entity_1 = require("./onboarding/entities/audit-log.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -29,7 +30,7 @@ exports.AppModule = AppModule = __decorate([
                     username: config.get("DB_USER", "postgres"),
                     password: config.get("DB_PASSWORD", "postgres"),
                     database: config.get("DB_NAME", "onboarding"),
-                    entities: [onboarding_request_entity_1.OnboardingRequest],
+                    entities: [onboarding_request_entity_1.OnboardingRequest, audit_log_entity_1.AuditLog],
                     synchronize: true,
                 }),
             }),

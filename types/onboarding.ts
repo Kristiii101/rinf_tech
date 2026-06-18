@@ -10,14 +10,27 @@ export type OnboardingStatus =
 
 export interface OnboardingRequest {
   id: string;
-  employeeName: string;
+  firstName: string;
+  lastName: string;
   role: string;
   startDate: string;
   hardwareTier: HardwareTier;
   status: OnboardingStatus;
-  rejectionReason?: string;
+  isUrgent: boolean;
+  rejectionReason?: string | null;
   generatedEmail?: string | null;
+  generatedPassword?: string | null;
   laptopConfig?: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface AuditLogEntry {
+  id: string;
+  requestId: string;
+  fromStatus: OnboardingStatus | null;
+  toStatus: OnboardingStatus;
+  actor: string | null;
+  note: string | null;
+  createdAt: string;
 }

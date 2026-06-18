@@ -35,14 +35,14 @@ let OnboardingController = class OnboardingController {
     update(id, dto) {
         return this.service.update(id, dto);
     }
-    managerApprove(id) {
-        return this.service.managerReview(id, true, {});
+    managerApprove(id, dto) {
+        return this.service.managerReview(id, true, dto);
     }
     managerReject(id, dto) {
         return this.service.managerReview(id, false, dto);
     }
-    financeApprove(id) {
-        return this.service.financeReview(id, true, {});
+    financeApprove(id, dto) {
+        return this.service.financeReview(id, true, dto);
     }
     financeReject(id, dto) {
         return this.service.financeReview(id, false, dto);
@@ -52,6 +52,9 @@ let OnboardingController = class OnboardingController {
     }
     itReject(id, dto) {
         return this.service.itProvision(id, false, dto);
+    }
+    getAuditLog(id) {
+        return this.service.getAuditLog(id);
     }
     remove(id) {
         return this.service.remove(id);
@@ -89,8 +92,9 @@ __decorate([
 __decorate([
     (0, common_1.Patch)(":id/manager/approve"),
     __param(0, (0, common_1.Param)("id")),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, review_onboarding_dto_1.ReviewOnboardingDto]),
     __metadata("design:returntype", void 0)
 ], OnboardingController.prototype, "managerApprove", null);
 __decorate([
@@ -104,8 +108,9 @@ __decorate([
 __decorate([
     (0, common_1.Patch)(":id/finance/approve"),
     __param(0, (0, common_1.Param)("id")),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, review_onboarding_dto_1.ReviewOnboardingDto]),
     __metadata("design:returntype", void 0)
 ], OnboardingController.prototype, "financeApprove", null);
 __decorate([
@@ -132,6 +137,13 @@ __decorate([
     __metadata("design:paramtypes", [String, review_onboarding_dto_1.ReviewOnboardingDto]),
     __metadata("design:returntype", void 0)
 ], OnboardingController.prototype, "itReject", null);
+__decorate([
+    (0, common_1.Get)(":id/audit"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], OnboardingController.prototype, "getAuditLog", null);
 __decorate([
     (0, common_1.Delete)(":id"),
     (0, common_1.HttpCode)(204),

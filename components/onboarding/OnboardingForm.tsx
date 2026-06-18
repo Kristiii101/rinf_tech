@@ -1,8 +1,20 @@
 "use client";
 
-import { useActionState } from "react";
+import { useTransition } from "react";
 import { Button } from "@/components/ui/Button";
+import { useToast } from "@/components/ui/Toast";
 import type { OnboardingRequest } from "@/types/onboarding";
+
+const ROLES = [
+  "Software Engineer",
+  "DevOps Engineer",
+  "QA Engineer",
+  "Product Manager",
+  "UI/UX Designer",
+  "HR Specialist",
+  "Data Analyst",
+  "Project Manager",
+];
 
 interface OnboardingFormProps {
   action: (prev: { error?: string } | null, formData: FormData) => Promise<{ error?: string }>;
@@ -10,34 +22,53 @@ interface OnboardingFormProps {
 }
 
 export function OnboardingForm({ action, defaultValues }: OnboardingFormProps) {
-  const [state, formAction] = useActionState(action, null);
+  const [isPending, startTransition] = useTransition();
+  const { showToast } = useToast();
+
+  const handleSubmit = (formData: FormData) => {
+    startTransition(async () => {
+      const result = await action(null, formData);
+      if (result?.error) showToast(result.error, "error");
+      else showToast("Onboarding request submitted successfully.", "success");
+    });
+  };
 
   return (
-    <form action={formAction} className="space-y-5">
-      {state?.error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
-          {state.error}
-        </p>
-      )}
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Employee Name</label>
-        <input
-          name="employeeName"
-          defaultValue={defaultValues?.employeeName}
-          required
-          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
+    <form action={handleSubmit} className="space-y-5">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+          <input
+            name="firstName"
+            defaultValue={defaultValues?.firstName}
+            required
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+          <input
+            name="lastName"
+            defaultValue={defaultValues?.lastName}
+            required
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-        <input
+        <select
           name="role"
-          defaultValue={defaultValues?.role}
+          defaultValue={defaultValues?.role ?? ""}
           required
           className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
+        >
+          <option value="" disabled>Select a role…</option>
+          {ROLES.map((r) => (
+            <option key={r} value={r}>{r}</option>
+          ))}
+        </select>
       </div>
 
       <div>
@@ -63,7 +94,20 @@ export function OnboardingForm({ action, defaultValues }: OnboardingFormProps) {
         </select>
       </div>
 
-      <Button type="submit" pendingLabel="Saving…">
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          id="isUrgent"
+          name="isUrgent"
+          defaultChecked={defaultValues?.isUrgent ?? false}
+          className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+        />
+        <label htmlFor="isUrgent" className="text-sm font-medium text-gray-700">
+          Mark as <span className="text-red-600 font-semibold">Urgent</span>
+        </label>
+      </div>
+
+      <Button type="submit" pendingLabel="Saving…" disabled={isPending}>
         Submit
       </Button>
     </form>

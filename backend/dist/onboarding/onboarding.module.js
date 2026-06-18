@@ -10,6 +10,7 @@ exports.OnboardingModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const onboarding_request_entity_1 = require("./entities/onboarding-request.entity");
+const audit_log_entity_1 = require("./entities/audit-log.entity");
 const onboarding_service_1 = require("./onboarding.service");
 const onboarding_controller_1 = require("./onboarding.controller");
 let OnboardingModule = class OnboardingModule {
@@ -17,7 +18,7 @@ let OnboardingModule = class OnboardingModule {
 exports.OnboardingModule = OnboardingModule;
 exports.OnboardingModule = OnboardingModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([onboarding_request_entity_1.OnboardingRequest])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([onboarding_request_entity_1.OnboardingRequest, audit_log_entity_1.AuditLog])],
         controllers: [onboarding_controller_1.OnboardingController],
         providers: [onboarding_service_1.OnboardingService],
     })

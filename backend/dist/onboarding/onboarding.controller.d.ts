@@ -9,11 +9,12 @@ export declare class OnboardingController {
     findOne(id: string): Promise<import("./entities/onboarding-request.entity").OnboardingRequest>;
     create(dto: CreateOnboardingDto): Promise<import("./entities/onboarding-request.entity").OnboardingRequest>;
     update(id: string, dto: UpdateOnboardingDto): Promise<import("./entities/onboarding-request.entity").OnboardingRequest>;
-    managerApprove(id: string): Promise<import("./entities/onboarding-request.entity").OnboardingRequest>;
+    managerApprove(id: string, dto: ReviewOnboardingDto): Promise<import("./entities/onboarding-request.entity").OnboardingRequest>;
     managerReject(id: string, dto: ReviewOnboardingDto): Promise<import("./entities/onboarding-request.entity").OnboardingRequest>;
-    financeApprove(id: string): Promise<import("./entities/onboarding-request.entity").OnboardingRequest>;
+    financeApprove(id: string, dto: ReviewOnboardingDto): Promise<import("./entities/onboarding-request.entity").OnboardingRequest>;
     financeReject(id: string, dto: ReviewOnboardingDto): Promise<import("./entities/onboarding-request.entity").OnboardingRequest>;
     itProvision(id: string, dto: ITProvisionDto): Promise<import("./entities/onboarding-request.entity").OnboardingRequest>;
     itReject(id: string, dto: ReviewOnboardingDto): Promise<import("./entities/onboarding-request.entity").OnboardingRequest>;
+    getAuditLog(id: string): Promise<import("./entities/audit-log.entity").AuditLog[]>;
     remove(id: string): Promise<void>;
 }

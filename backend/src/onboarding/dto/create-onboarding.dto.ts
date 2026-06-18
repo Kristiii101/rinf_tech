@@ -1,9 +1,12 @@
-import { IsDateString, IsEnum, IsString } from "class-validator";
+import { IsBoolean, IsDateString, IsEnum, IsOptional, IsString } from "class-validator";
 import { HardwareTier } from "../../common/enums/onboarding.enum";
 
 export class CreateOnboardingDto {
   @IsString()
-  employeeName: string;
+  firstName: string;
+
+  @IsString()
+  lastName: string;
 
   @IsString()
   role: string;
@@ -13,4 +16,8 @@ export class CreateOnboardingDto {
 
   @IsEnum(HardwareTier)
   hardwareTier: HardwareTier;
+
+  @IsBoolean()
+  @IsOptional()
+  isUrgent?: boolean;
 }

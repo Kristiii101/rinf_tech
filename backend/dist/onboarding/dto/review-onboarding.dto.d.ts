@@ -4,5 +4,6 @@ export declare class UpdateOnboardingDto extends UpdateOnboardingDto_base {
 }
 export declare class ReviewOnboardingDto {
     rejectionReason?: string;
+    approvalNote?: string;
 }
 export {};

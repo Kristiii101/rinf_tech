@@ -12,8 +12,11 @@ export class OnboardingRequest {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
-  employeeName: string;
+  @Column({ type: "varchar" })
+  firstName: string;
+
+  @Column({ type: "varchar" })
+  lastName: string;
 
   @Column()
   role: string;
@@ -27,11 +30,17 @@ export class OnboardingRequest {
   @Column({ type: "enum", enum: OnboardingStatus, default: OnboardingStatus.PENDING_MANAGER })
   status: OnboardingStatus;
 
+  @Column({ type: "boolean", default: false })
+  isUrgent: boolean;
+
   @Column({ type: "varchar", nullable: true })
   rejectionReason: string | null;
 
   @Column({ type: "varchar", nullable: true })
   generatedEmail: string | null;
+
+  @Column({ type: "varchar", nullable: true })
+  generatedPassword: string | null;
 
   @Column({ type: "varchar", nullable: true })
   laptopConfig: string | null;

@@ -13,6 +13,7 @@ exports.ITProvisionDto = void 0;
 const class_validator_1 = require("class-validator");
 class ITProvisionDto {
     generatedEmail;
+    generatedPassword;
     laptopConfig;
     rejectionReason;
 }
@@ -21,6 +22,10 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], ITProvisionDto.prototype, "generatedEmail", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ITProvisionDto.prototype, "generatedPassword", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)

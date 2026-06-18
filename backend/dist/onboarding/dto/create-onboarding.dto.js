@@ -13,16 +13,22 @@ exports.CreateOnboardingDto = void 0;
 const class_validator_1 = require("class-validator");
 const onboarding_enum_1 = require("../../common/enums/onboarding.enum");
 class CreateOnboardingDto {
-    employeeName;
+    firstName;
+    lastName;
     role;
     startDate;
     hardwareTier;
+    isUrgent;
 }
 exports.CreateOnboardingDto = CreateOnboardingDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateOnboardingDto.prototype, "employeeName", void 0);
+], CreateOnboardingDto.prototype, "firstName", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateOnboardingDto.prototype, "lastName", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
@@ -35,4 +41,9 @@ __decorate([
     (0, class_validator_1.IsEnum)(onboarding_enum_1.HardwareTier),
     __metadata("design:type", String)
 ], CreateOnboardingDto.prototype, "hardwareTier", void 0);
+__decorate([
+    (0, class_validator_1.IsBoolean)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Boolean)
+], CreateOnboardingDto.prototype, "isUrgent", void 0);
 //# sourceMappingURL=create-onboarding.dto.js.map

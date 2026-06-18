@@ -2,6 +2,7 @@ import { getOnboardingByStatus } from "@/lib/api";
 import { formatDate } from "@/lib/formatDate";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { ReviewActions } from "@/components/onboarding/ReviewActions";
+import { FisaDePost } from "@/components/onboarding/FisaDePost";
 import { managerApprove, managerReject } from "@/app/actions";
 import type { OnboardingRequest } from "@/types/onboarding";
 
@@ -24,11 +25,17 @@ export default async function ManagerPage() {
             const approve = managerApprove.bind(null, r.id);
             const reject = managerReject.bind(null, r.id);
             return (
-              <div key={r.id} className="bg-white border border-gray-200 rounded-lg p-5">
+              <div key={r.id} className={`bg-white border rounded-lg p-5 ${r.isUrgent ? "border-red-400 ring-1 ring-red-300" : "border-gray-200"}`}>
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <p className="font-semibold text-gray-900">{r.employeeName}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-gray-900">{r.firstName} {r.lastName}</p>
+                      {r.isUrgent && <span className="text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">Urgent</span>}
+                    </div>
                     <p className="text-sm text-gray-500">{r.role} · {formatDate(r.startDate)} · {r.hardwareTier}</p>
+                    <div className="mt-1">
+                      <FisaDePost request={r} />
+                    </div>
                   </div>
                   <StatusBadge status={r.status} />
                 </div>

@@ -14,13 +14,16 @@ const typeorm_1 = require("typeorm");
 const onboarding_enum_1 = require("../../common/enums/onboarding.enum");
 let OnboardingRequest = class OnboardingRequest {
     id;
-    employeeName;
+    firstName;
+    lastName;
     role;
     startDate;
     hardwareTier;
     status;
+    isUrgent;
     rejectionReason;
     generatedEmail;
+    generatedPassword;
     laptopConfig;
     createdAt;
     updatedAt;
@@ -31,9 +34,13 @@ __decorate([
     __metadata("design:type", String)
 ], OnboardingRequest.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: "varchar" }),
     __metadata("design:type", String)
-], OnboardingRequest.prototype, "employeeName", void 0);
+], OnboardingRequest.prototype, "firstName", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "varchar" }),
+    __metadata("design:type", String)
+], OnboardingRequest.prototype, "lastName", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
@@ -51,6 +58,10 @@ __decorate([
     __metadata("design:type", String)
 ], OnboardingRequest.prototype, "status", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: "boolean", default: false }),
+    __metadata("design:type", Boolean)
+], OnboardingRequest.prototype, "isUrgent", void 0);
+__decorate([
     (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
     __metadata("design:type", Object)
 ], OnboardingRequest.prototype, "rejectionReason", void 0);
@@ -58,6 +69,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
     __metadata("design:type", Object)
 ], OnboardingRequest.prototype, "generatedEmail", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
+    __metadata("design:type", Object)
+], OnboardingRequest.prototype, "generatedPassword", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
     __metadata("design:type", Object)

@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { OnboardingModule } from "./onboarding/onboarding.module";
 import { OnboardingRequest } from "./onboarding/entities/onboarding-request.entity";
+import { AuditLog } from "./onboarding/entities/audit-log.entity";
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { OnboardingRequest } from "./onboarding/entities/onboarding-request.enti
         username: config.get("DB_USER", "postgres"),
         password: config.get("DB_PASSWORD", "postgres"),
         database: config.get("DB_NAME", "onboarding"),
-        entities: [OnboardingRequest],
+        entities: [OnboardingRequest, AuditLog],
         synchronize: true,
       }),
     }),

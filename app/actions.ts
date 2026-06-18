@@ -11,10 +11,12 @@ export async function createOnboarding(
 ): Promise<{ error?: string }> {
   try {
     const body = {
-      employeeName: formData.get("employeeName"),
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
       role: formData.get("role"),
       startDate: formData.get("startDate"),
       hardwareTier: formData.get("hardwareTier"),
+      isUrgent: formData.get("isUrgent") === "on",
     };
     await apiFetch<OnboardingRequest>("/onboarding", {
       method: "POST",
@@ -34,10 +36,12 @@ export async function updateOnboarding(
 ): Promise<{ error?: string }> {
   try {
     const body = {
-      employeeName: formData.get("employeeName"),
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
       role: formData.get("role"),
       startDate: formData.get("startDate"),
       hardwareTier: formData.get("hardwareTier"),
+      isUrgent: formData.get("isUrgent") === "on",
     };
     await apiFetch<OnboardingRequest>(`/onboarding/${id}`, {
       method: "PATCH",
@@ -51,10 +55,23 @@ export async function updateOnboarding(
   redirect("/dashboard");
 }
 
-export async function managerApprove(id: string): Promise<void> {
-  await apiFetch(`/onboarding/${id}/manager/approve`, { method: "PATCH" });
+export async function managerApprove(
+  id: string,
+  _prev: { error?: string } | null,
+  formData: FormData,
+): Promise<{ error?: string }> {
+  const approvalNote = formData.get("approvalNote") as string | null;
+  try {
+    await apiFetch(`/onboarding/${id}/manager/approve`, {
+      method: "PATCH",
+      body: JSON.stringify({ approvalNote: approvalNote || undefined }),
+    });
+  } catch {
+    return { error: "Failed to approve request." };
+  }
   revalidatePath("/manager");
   revalidatePath("/dashboard");
+  return {};
 }
 
 export async function managerReject(
@@ -77,10 +94,23 @@ export async function managerReject(
   return {};
 }
 
-export async function financeApprove(id: string): Promise<void> {
-  await apiFetch(`/onboarding/${id}/finance/approve`, { method: "PATCH" });
+export async function financeApprove(
+  id: string,
+  _prev: { error?: string } | null,
+  formData: FormData,
+): Promise<{ error?: string }> {
+  const approvalNote = formData.get("approvalNote") as string | null;
+  try {
+    await apiFetch(`/onboarding/${id}/finance/approve`, {
+      method: "PATCH",
+      body: JSON.stringify({ approvalNote: approvalNote || undefined }),
+    });
+  } catch {
+    return { error: "Failed to approve request." };
+  }
   revalidatePath("/finance");
   revalidatePath("/dashboard");
+  return {};
 }
 
 export async function financeReject(
@@ -109,12 +139,13 @@ export async function itProvision(
   formData: FormData,
 ): Promise<{ error?: string }> {
   const generatedEmail = formData.get("generatedEmail");
+  const generatedPassword = formData.get("generatedPassword");
   const laptopConfig = formData.get("laptopConfig");
-  if (!generatedEmail || !laptopConfig) return { error: "Email and laptop config are required." };
+  if (!generatedEmail || !generatedPassword || !laptopConfig) return { error: "Email, password and laptop config are required." };
   try {
     await apiFetch(`/onboarding/${id}/it/provision`, {
       method: "PATCH",
-      body: JSON.stringify({ generatedEmail, laptopConfig }),
+      body: JSON.stringify({ generatedEmail, generatedPassword, laptopConfig }),
     });
   } catch {
     return { error: "Failed to provision." };

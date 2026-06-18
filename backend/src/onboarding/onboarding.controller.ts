@@ -29,8 +29,8 @@ export class OnboardingController {
   }
 
   @Patch(":id/manager/approve")
-  managerApprove(@Param("id") id: string) {
-    return this.service.managerReview(id, true, {});
+  managerApprove(@Param("id") id: string, @Body() dto: ReviewOnboardingDto) {
+    return this.service.managerReview(id, true, dto);
   }
 
   @Patch(":id/manager/reject")
@@ -39,8 +39,8 @@ export class OnboardingController {
   }
 
   @Patch(":id/finance/approve")
-  financeApprove(@Param("id") id: string) {
-    return this.service.financeReview(id, true, {});
+  financeApprove(@Param("id") id: string, @Body() dto: ReviewOnboardingDto) {
+    return this.service.financeReview(id, true, dto);
   }
 
   @Patch(":id/finance/reject")
@@ -56,6 +56,11 @@ export class OnboardingController {
   @Patch(":id/it/reject")
   itReject(@Param("id") id: string, @Body() dto: ReviewOnboardingDto) {
     return this.service.itProvision(id, false, dto as ITProvisionDto);
+  }
+
+  @Get(":id/audit")
+  getAuditLog(@Param("id") id: string) {
+    return this.service.getAuditLog(id);
   }
 
   @Delete(":id")

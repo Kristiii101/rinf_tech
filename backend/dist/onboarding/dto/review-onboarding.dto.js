@@ -18,6 +18,7 @@ class UpdateOnboardingDto extends (0, mapped_types_1.PartialType)(create_onboard
 exports.UpdateOnboardingDto = UpdateOnboardingDto;
 class ReviewOnboardingDto {
     rejectionReason;
+    approvalNote;
 }
 exports.ReviewOnboardingDto = ReviewOnboardingDto;
 __decorate([
@@ -25,4 +26,9 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], ReviewOnboardingDto.prototype, "rejectionReason", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], ReviewOnboardingDto.prototype, "approvalNote", void 0);
 //# sourceMappingURL=review-onboarding.dto.js.map
