@@ -6,6 +6,17 @@ import { useToast } from "@/components/ui/Toast";
 
 const CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
 
+const LAPTOP_OPTIONS = [
+  "MacBook Pro 14\" M3",
+  "MacBook Pro 16\" M3 Max",
+  "Dell XPS 15",
+  "Dell Latitude 5540",
+  "Lenovo ThinkPad X1 Carbon",
+  "Lenovo ThinkPad T14s",
+  "HP EliteBook 840 G10",
+  "Custom",
+];
+
 function generatePassword() {
   return Array.from({ length: 6 }, () => CHARS[Math.floor(Math.random() * CHARS.length)]).join("");
 }
@@ -24,6 +35,8 @@ export function ITProvisionForm({ provisionAction, rejectAction, defaultEmail, d
   const [isPending, startTransition] = useTransition();
   const [password, setPassword] = useState(defaultPassword ?? "");
   const [email, setEmail] = useState(defaultEmail ?? suggestedEmail ?? "");
+  const defaultLaptop = LAPTOP_OPTIONS.includes(defaultLaptopConfig ?? "") ? defaultLaptopConfig! : (defaultLaptopConfig ? "Custom" : LAPTOP_OPTIONS[0]);
+  const [laptopConfig, setLaptopConfig] = useState(defaultLaptop);
   const { showToast } = useToast();
 
   const handleProvision = (formData: FormData) => {
@@ -97,13 +110,17 @@ export function ITProvisionForm({ provisionAction, rejectAction, defaultEmail, d
       </div>
       <div>
         <label className="block text-xs font-medium text-gray-700 mb-1">Laptop Configuration</label>
-        <input
+        <select
           name="laptopConfig"
-          defaultValue={defaultLaptopConfig ?? ""}
-          placeholder="e.g. MacBook Pro 16 / Dell XPS 15"
+          value={laptopConfig}
+          onChange={(e) => setLaptopConfig(e.target.value)}
           required
-          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
+          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+        >
+          {LAPTOP_OPTIONS.map((opt) => (
+            <option key={opt} value={opt}>{opt}</option>
+          ))}
+        </select>
       </div>
       <div className="flex gap-2">
         <Button type="submit" pendingLabel="Provisioning…" disabled={isPending}>

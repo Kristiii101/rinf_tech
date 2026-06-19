@@ -31,7 +31,12 @@ export default async function OnboardingDetailPage({ params }: { params: Promise
         <div className="flex items-center gap-3">
           <h1 className="text-xl font-bold text-gray-900">{request.firstName} {request.lastName}</h1>
           <StatusBadge status={request.status} />
-          {request.isUrgent && <span className="text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">Urgent</span>}
+          {request.isUrgent && request.status !== "COMPLETED" && (
+            <span className="text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">Urgent</span>
+          )}
+          {request.isUrgent && request.status === "COMPLETED" && (
+            <span className="text-xs font-medium bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full">Was urgent</span>
+          )}
         </div>
         <DeleteButton action={deleteWithId} employeeName={`${request.firstName} ${request.lastName}`} />
       </div>

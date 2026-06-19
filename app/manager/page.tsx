@@ -1,6 +1,7 @@
 import { getOnboardingByStatus } from "@/lib/api";
 import { formatDate } from "@/lib/formatDate";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import { SlaIndicator } from "@/components/ui/SlaIndicator";
 import { ReviewActions } from "@/components/onboarding/ReviewActions";
 import { FisaDePost } from "@/components/onboarding/FisaDePost";
 import { managerApprove, managerReject } from "@/app/actions";
@@ -31,6 +32,7 @@ export default async function ManagerPage() {
                     <div className="flex items-center gap-2">
                       <p className="font-semibold text-gray-900">{r.firstName} {r.lastName}</p>
                       {r.isUrgent && <span className="text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">Urgent</span>}
+                      <SlaIndicator status={r.status} updatedAt={r.updatedAt} />
                     </div>
                     <p className="text-sm text-gray-500">{r.role} · {formatDate(r.startDate)} · {r.hardwareTier}</p>
                     <div className="mt-1">

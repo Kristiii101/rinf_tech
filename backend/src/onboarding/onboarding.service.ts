@@ -30,7 +30,12 @@ export class OnboardingService {
   }
 
   findAll() {
-    return this.repo.find({ order: { isUrgent: "DESC", createdAt: "DESC" } });
+    return this.repo
+      .createQueryBuilder("r")
+      .orderBy("CASE WHEN r.status = 'COMPLETED' THEN 1 ELSE 0 END", "ASC")
+      .addOrderBy("r.isUrgent", "DESC")
+      .addOrderBy("r.createdAt", "DESC")
+      .getMany();
   }
 
   async findOne(id: string) {

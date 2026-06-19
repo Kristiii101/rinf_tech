@@ -178,6 +178,5 @@ export async function itReject(
 export async function deleteOnboarding(id: string): Promise<void> {
   await apiFetch(`/onboarding/${id}`, { method: "DELETE" });
   revalidatePath("/dashboard");
-  redirect("/dashboard");
 }
 

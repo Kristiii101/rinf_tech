@@ -30,7 +30,12 @@ let OnboardingService = class OnboardingService {
         await this.auditRepo.save(this.auditRepo.create({ requestId, fromStatus: from, toStatus: to, actor, note: note ?? null }));
     }
     findAll() {
-        return this.repo.find({ order: { isUrgent: "DESC", createdAt: "DESC" } });
+        return this.repo
+            .createQueryBuilder("r")
+            .orderBy("CASE WHEN r.status = 'COMPLETED' THEN 1 ELSE 0 END", "ASC")
+            .addOrderBy("r.isUrgent", "DESC")
+            .addOrderBy("r.createdAt", "DESC")
+            .getMany();
     }
     async findOne(id) {
         const req = await this.repo.findOneBy({ id });
