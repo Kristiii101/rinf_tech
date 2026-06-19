@@ -19,6 +19,7 @@ class CreateOnboardingDto {
     startDate;
     hardwareTier;
     isUrgent;
+    workHours;
 }
 exports.CreateOnboardingDto = CreateOnboardingDto;
 __decorate([
@@ -46,4 +47,10 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Boolean)
 ], CreateOnboardingDto.prototype, "isUrgent", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsIn)([4, 6, 8]),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Number)
+], CreateOnboardingDto.prototype, "workHours", void 0);
 //# sourceMappingURL=create-onboarding.dto.js.map

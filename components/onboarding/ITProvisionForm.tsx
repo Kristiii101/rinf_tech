@@ -3,19 +3,9 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
+import { laptopsForBudget } from "@/lib/laptops";
 
 const CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
-
-const LAPTOP_OPTIONS = [
-  "MacBook Pro 14\" M3",
-  "MacBook Pro 16\" M3 Max",
-  "Dell XPS 15",
-  "Dell Latitude 5540",
-  "Lenovo ThinkPad X1 Carbon",
-  "Lenovo ThinkPad T14s",
-  "HP EliteBook 840 G10",
-  "Custom",
-];
 
 function generatePassword() {
   return Array.from({ length: 6 }, () => CHARS[Math.floor(Math.random() * CHARS.length)]).join("");
@@ -28,16 +18,20 @@ interface ITProvisionFormProps {
   defaultPassword?: string | null;
   defaultLaptopConfig?: string | null;
   suggestedEmail?: string;
+  budgetEuros: number;
 }
 
-export function ITProvisionForm({ provisionAction, rejectAction, defaultEmail, defaultPassword, defaultLaptopConfig, suggestedEmail }: ITProvisionFormProps) {
+export function ITProvisionForm({ provisionAction, rejectAction, defaultEmail, defaultPassword, defaultLaptopConfig, suggestedEmail, budgetEuros }: ITProvisionFormProps) {
   const [showReject, setShowReject] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [password, setPassword] = useState(defaultPassword ?? "");
   const [email, setEmail] = useState(defaultEmail ?? suggestedEmail ?? "");
-  const defaultLaptop = LAPTOP_OPTIONS.includes(defaultLaptopConfig ?? "") ? defaultLaptopConfig! : (defaultLaptopConfig ? "Custom" : LAPTOP_OPTIONS[0]);
-  const [laptopConfig, setLaptopConfig] = useState(defaultLaptop);
   const { showToast } = useToast();
+
+  const availableLaptops = laptopsForBudget(budgetEuros);
+  const firstAvailable = availableLaptops[0]?.label ?? "";
+  const isDefaultValid = availableLaptops.some((l) => l.label === defaultLaptopConfig);
+  const [laptopConfig, setLaptopConfig] = useState(isDefaultValid ? defaultLaptopConfig! : firstAvailable);
 
   const handleProvision = (formData: FormData) => {
     startTransition(async () => {
@@ -109,21 +103,28 @@ export function ITProvisionForm({ provisionAction, rejectAction, defaultEmail, d
         </button>
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-700 mb-1">Laptop Configuration</label>
-        <select
-          name="laptopConfig"
-          value={laptopConfig}
-          onChange={(e) => setLaptopConfig(e.target.value)}
-          required
-          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
-        >
-          {LAPTOP_OPTIONS.map((opt) => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
-        </select>
+        <label className="block text-xs font-medium text-gray-700 mb-1">
+          Laptop Configuration
+          <span className="ml-1 font-normal text-gray-400">(budget: €{budgetEuros})</span>
+        </label>
+        {availableLaptops.length === 0 ? (
+          <p className="text-sm text-red-500">No laptops available within the approved budget of €{budgetEuros}.</p>
+        ) : (
+          <select
+            name="laptopConfig"
+            value={laptopConfig}
+            onChange={(e) => setLaptopConfig(e.target.value)}
+            required
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+          >
+            {availableLaptops.map(({ label, price }) => (
+              <option key={label} value={label}>{label} — €{price}</option>
+            ))}
+          </select>
+        )}
       </div>
       <div className="flex gap-2">
-        <Button type="submit" pendingLabel="Provisioning…" disabled={isPending}>
+        <Button type="submit" pendingLabel="Provisioning…" disabled={isPending || availableLaptops.length === 0}>
           Complete Provisioning
         </Button>
         <Button type="button" variant="danger" onClick={() => setShowReject(true)} disabled={isPending}>
@@ -133,3 +134,4 @@ export function ITProvisionForm({ provisionAction, rejectAction, defaultEmail, d
     </form>
   );
 }
+

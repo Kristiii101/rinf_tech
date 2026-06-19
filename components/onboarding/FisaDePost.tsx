@@ -75,7 +75,7 @@ export function FisaDePost({ request }: FisaDePostProps) {
         <div className="pt-4 border-t">
           <dt className="font-medium text-gray-500 mb-2">Condiții de muncă</dt>
           <dd className="text-gray-700">
-            <p>• Program de lucru: full-time.</p>
+            <p>• Program de lucru: {request.workHours}h / zi — {request.workHours === 8 ? "full-time" : "part-time"}.</p>
             <p>• Echipament IT: {request.hardwareTier === "Premium" ? "Pachet Premium (laptop de înaltă performanță)." : "Pachet Standard."}</p>
           </dd>
         </div>

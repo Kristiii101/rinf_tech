@@ -8,10 +8,12 @@ export declare class OnboardingRequest {
     hardwareTier: HardwareTier;
     status: OnboardingStatus;
     isUrgent: boolean;
+    workHours: number;
     rejectionReason: string | null;
     generatedEmail: string | null;
     generatedPassword: string | null;
     laptopConfig: string | null;
+    approvedBudget: number | null;
     createdAt: Date;
     updatedAt: Date;
 }

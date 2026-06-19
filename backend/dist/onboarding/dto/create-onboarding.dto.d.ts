@@ -6,4 +6,5 @@ export declare class CreateOnboardingDto {
     startDate: string;
     hardwareTier: HardwareTier;
     isUrgent?: boolean;
+    workHours?: number;
 }

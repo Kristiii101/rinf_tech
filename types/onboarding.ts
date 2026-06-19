@@ -17,10 +17,12 @@ export interface OnboardingRequest {
   hardwareTier: HardwareTier;
   status: OnboardingStatus;
   isUrgent: boolean;
+  workHours: 4 | 6 | 8;
   rejectionReason?: string | null;
   generatedEmail?: string | null;
   generatedPassword?: string | null;
   laptopConfig?: string | null;
+  approvedBudget?: number | null;
   createdAt: string;
   updatedAt: string;
 }

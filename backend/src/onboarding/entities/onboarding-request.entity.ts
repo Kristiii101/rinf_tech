@@ -33,6 +33,9 @@ export class OnboardingRequest {
   @Column({ type: "boolean", default: false })
   isUrgent: boolean;
 
+  @Column({ type: "int", default: 8 })
+  workHours: number;
+
   @Column({ type: "varchar", nullable: true })
   rejectionReason: string | null;
 
@@ -44,6 +47,9 @@ export class OnboardingRequest {
 
   @Column({ type: "varchar", nullable: true })
   laptopConfig: string | null;
+
+  @Column({ type: "int", nullable: true })
+  approvedBudget: number | null;
 
   @CreateDateColumn()
   createdAt: Date;

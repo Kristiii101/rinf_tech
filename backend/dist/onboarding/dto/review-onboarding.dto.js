@@ -13,12 +13,15 @@ exports.ReviewOnboardingDto = exports.UpdateOnboardingDto = void 0;
 const class_validator_1 = require("class-validator");
 const create_onboarding_dto_1 = require("./create-onboarding.dto");
 const mapped_types_1 = require("@nestjs/mapped-types");
+const onboarding_enum_1 = require("../../common/enums/onboarding.enum");
 class UpdateOnboardingDto extends (0, mapped_types_1.PartialType)(create_onboarding_dto_1.CreateOnboardingDto) {
 }
 exports.UpdateOnboardingDto = UpdateOnboardingDto;
 class ReviewOnboardingDto {
     rejectionReason;
     approvalNote;
+    approvedBudget;
+    overrideTier;
 }
 exports.ReviewOnboardingDto = ReviewOnboardingDto;
 __decorate([
@@ -31,4 +34,15 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], ReviewOnboardingDto.prototype, "approvalNote", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(1),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Number)
+], ReviewOnboardingDto.prototype, "approvedBudget", void 0);
+__decorate([
+    (0, class_validator_1.IsEnum)(onboarding_enum_1.HardwareTier),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], ReviewOnboardingDto.prototype, "overrideTier", void 0);
 //# sourceMappingURL=review-onboarding.dto.js.map

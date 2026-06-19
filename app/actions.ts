@@ -17,6 +17,7 @@ export async function createOnboarding(
       startDate: formData.get("startDate"),
       hardwareTier: formData.get("hardwareTier"),
       isUrgent: formData.get("isUrgent") === "on",
+      workHours: parseInt(formData.get("workHours") as string, 10) || 8,
     };
     await apiFetch<OnboardingRequest>("/onboarding", {
       method: "POST",
@@ -42,6 +43,7 @@ export async function updateOnboarding(
       startDate: formData.get("startDate"),
       hardwareTier: formData.get("hardwareTier"),
       isUrgent: formData.get("isUrgent") === "on",
+      workHours: parseInt(formData.get("workHours") as string, 10) || 8,
     };
     await apiFetch<OnboardingRequest>(`/onboarding/${id}`, {
       method: "PATCH",
@@ -61,10 +63,14 @@ export async function managerApprove(
   formData: FormData,
 ): Promise<{ error?: string }> {
   const approvalNote = formData.get("approvalNote") as string | null;
+  const overrideTier = formData.get("overrideTier") as string | null;
   try {
     await apiFetch(`/onboarding/${id}/manager/approve`, {
       method: "PATCH",
-      body: JSON.stringify({ approvalNote: approvalNote || undefined }),
+      body: JSON.stringify({
+        approvalNote: approvalNote || undefined,
+        overrideTier: overrideTier || undefined,
+      }),
     });
   } catch {
     return { error: "Failed to approve request." };
@@ -100,10 +106,13 @@ export async function financeApprove(
   formData: FormData,
 ): Promise<{ error?: string }> {
   const approvalNote = formData.get("approvalNote") as string | null;
+  const budgetRaw = formData.get("approvedBudget") as string | null;
+  const approvedBudget = budgetRaw ? parseInt(budgetRaw, 10) : undefined;
+  if (!approvedBudget || approvedBudget < 1) return { error: "A valid budget in € is required." };
   try {
     await apiFetch(`/onboarding/${id}/finance/approve`, {
       method: "PATCH",
-      body: JSON.stringify({ approvalNote: approvalNote || undefined }),
+      body: JSON.stringify({ approvalNote: approvalNote || undefined, approvedBudget }),
     });
   } catch {
     return { error: "Failed to approve request." };

@@ -33,10 +33,18 @@ export default async function ITPage() {
                       {r.isUrgent && <span className="text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">Urgent</span>}
                       <SlaIndicator status={r.status} updatedAt={r.updatedAt} />
                     </div>
-                    <p className="text-sm text-gray-500">{r.role} · {formatDate(r.startDate)} · {r.hardwareTier}</p>
+                    <p className="text-sm text-gray-500">
+                      {r.role} · {formatDate(r.startDate)} · {r.hardwareTier}
+                      {r.approvedBudget && <span className="ml-1 text-indigo-600 font-medium">· Budget: €{r.approvedBudget}</span>}
+                    </p>
                   </div>
                   <StatusBadge status={r.status} />
                 </div>
+                {r.rejectionReason && (
+                  <div className="mb-4 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 text-xs text-amber-800">
+                    <span className="font-semibold">Previous rejection reason:</span> {r.rejectionReason}
+                  </div>
+                )}
                 <ITProvisionForm
                   provisionAction={provision}
                   rejectAction={reject}
@@ -44,6 +52,7 @@ export default async function ITPage() {
                   defaultPassword={r.generatedPassword}
                   defaultLaptopConfig={r.laptopConfig}
                   suggestedEmail={r.generatedEmail ? undefined : `${r.firstName.toLowerCase()}.${r.lastName.toLowerCase()}@rinf.tech`}
+                  budgetEuros={r.hardwareTier === "Premium" ? (r.approvedBudget ?? 500) : 500}
                 />
               </div>
             );

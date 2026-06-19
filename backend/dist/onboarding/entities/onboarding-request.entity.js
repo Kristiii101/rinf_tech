@@ -21,10 +21,12 @@ let OnboardingRequest = class OnboardingRequest {
     hardwareTier;
     status;
     isUrgent;
+    workHours;
     rejectionReason;
     generatedEmail;
     generatedPassword;
     laptopConfig;
+    approvedBudget;
     createdAt;
     updatedAt;
 };
@@ -62,6 +64,10 @@ __decorate([
     __metadata("design:type", Boolean)
 ], OnboardingRequest.prototype, "isUrgent", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: "int", default: 8 }),
+    __metadata("design:type", Number)
+], OnboardingRequest.prototype, "workHours", void 0);
+__decorate([
     (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
     __metadata("design:type", Object)
 ], OnboardingRequest.prototype, "rejectionReason", void 0);
@@ -77,6 +83,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
     __metadata("design:type", Object)
 ], OnboardingRequest.prototype, "laptopConfig", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "int", nullable: true }),
+    __metadata("design:type", Object)
+], OnboardingRequest.prototype, "approvedBudget", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)

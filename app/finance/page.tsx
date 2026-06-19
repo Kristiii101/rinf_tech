@@ -1,22 +1,26 @@
-import { getOnboardingByStatus } from "@/lib/api";
+import { getOnboardingRequests } from "@/lib/api";
 import { formatDate } from "@/lib/formatDate";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { SlaIndicator } from "@/components/ui/SlaIndicator";
-import { ReviewActions } from "@/components/onboarding/ReviewActions";
+import { FinanceReviewActions } from "@/components/onboarding/FinanceReviewActions";
+import { FinanceSpendSummary } from "@/components/onboarding/FinanceSpendSummary";
 import { financeApprove, financeReject } from "@/app/actions";
 import type { OnboardingRequest } from "@/types/onboarding";
 
 export default async function FinancePage() {
-  let requests: OnboardingRequest[] = [];
+  let all: OnboardingRequest[] = [];
   try {
-    requests = await getOnboardingByStatus("PENDING_FINANCE");
+    all = await getOnboardingRequests();
   } catch {
     // backend not yet running
   }
 
+  const requests = all.filter((r) => r.status === "PENDING_FINANCE");
+
   return (
     <div>
       <h1 className="text-xl font-bold text-gray-900 mb-6">Finance Approval</h1>
+      <FinanceSpendSummary requests={all} />
       {requests.length === 0 ? (
         <p className="text-gray-500 text-sm">No Premium hardware requests pending finance approval.</p>
       ) : (
@@ -37,7 +41,12 @@ export default async function FinancePage() {
                   </div>
                   <StatusBadge status={r.status} />
                 </div>
-                <ReviewActions approveAction={approve} rejectAction={reject} />
+                {r.rejectionReason && (
+                  <div className="mb-3 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 text-xs text-amber-800">
+                    <span className="font-semibold">Previous rejection reason:</span> {r.rejectionReason}
+                  </div>
+                )}
+                <FinanceReviewActions approveAction={approve} rejectAction={reject} />
               </div>
             );
           })}

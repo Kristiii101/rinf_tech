@@ -65,7 +65,7 @@ let OnboardingService = class OnboardingService {
             throw new common_1.BadRequestException("Completed onboarding requests cannot be edited");
         }
         const prev = req.status;
-        Object.assign(req, dto, { status: onboarding_enum_1.OnboardingStatus.PENDING_MANAGER, rejectionReason: null });
+        Object.assign(req, dto, { status: onboarding_enum_1.OnboardingStatus.PENDING_MANAGER });
         const saved = await this.repo.save(req);
         await this.log(id, prev, onboarding_enum_1.OnboardingStatus.PENDING_MANAGER, "HR", "Request edited and resubmitted");
         return saved;
@@ -77,12 +77,19 @@ let OnboardingService = class OnboardingService {
         }
         const prev = req.status;
         if (approved) {
+            const tierOverridden = dto.overrideTier && dto.overrideTier !== req.hardwareTier;
+            if (tierOverridden) {
+                req.hardwareTier = dto.overrideTier;
+            }
             req.status =
                 req.hardwareTier === onboarding_enum_1.HardwareTier.PREMIUM
                     ? onboarding_enum_1.OnboardingStatus.PENDING_FINANCE
                     : onboarding_enum_1.OnboardingStatus.PENDING_IT;
             const saved = await this.repo.save(req);
-            await this.log(id, prev, req.status, "Manager", dto.approvalNote ?? "Approved — Fișa de post confirmed");
+            const note = tierOverridden
+                ? `Approved — hardware tier overridden to ${dto.overrideTier}${dto.approvalNote ? ` — ${dto.approvalNote}` : ""}`
+                : dto.approvalNote ?? "Approved — Fișa de post confirmed";
+            await this.log(id, prev, req.status, "Manager", note);
             return saved;
         }
         else {
@@ -101,8 +108,12 @@ let OnboardingService = class OnboardingService {
         const prev = req.status;
         if (approved) {
             req.status = onboarding_enum_1.OnboardingStatus.PENDING_IT;
+            req.approvedBudget = dto.approvedBudget ?? null;
             const saved = await this.repo.save(req);
-            await this.log(id, prev, onboarding_enum_1.OnboardingStatus.PENDING_IT, "Finance", dto.approvalNote ?? "Hardware budget approved");
+            const note = dto.approvedBudget
+                ? `Budget approved: ${dto.approvedBudget}€${dto.approvalNote ? ` — ${dto.approvalNote}` : ""}`
+                : dto.approvalNote ?? "Hardware budget approved";
+            await this.log(id, prev, onboarding_enum_1.OnboardingStatus.PENDING_IT, "Finance", note);
             return saved;
         }
         else {
@@ -121,6 +132,7 @@ let OnboardingService = class OnboardingService {
         const prev = req.status;
         if (approved) {
             req.status = onboarding_enum_1.OnboardingStatus.COMPLETED;
+            req.rejectionReason = null;
             req.generatedEmail = dto.generatedEmail ?? null;
             req.generatedPassword = dto.generatedPassword ?? null;
             req.laptopConfig = dto.laptopConfig ?? null;

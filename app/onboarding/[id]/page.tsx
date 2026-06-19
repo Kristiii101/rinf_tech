@@ -47,6 +47,10 @@ export default async function OnboardingDetailPage({ params }: { params: Promise
         <div className="flex justify-between"><span className="font-medium">Role</span><span>{request.role}</span></div>
         <div className="flex justify-between"><span className="font-medium">Start Date</span><span>{formatDate(request.startDate)}</span></div>
         <div className="flex justify-between"><span className="font-medium">Hardware Tier</span><span>{request.hardwareTier}</span></div>
+        {request.approvedBudget && (
+          <div className="flex justify-between"><span className="font-medium">Approved Budget</span><span className="text-indigo-700 font-medium">€{request.approvedBudget}</span></div>
+        )}
+        <div className="flex justify-between"><span className="font-medium">Program de lucru</span><span>{request.workHours}h / zi — {request.workHours === 8 ? "Full-time" : "Part-time"}</span></div>
         {request.generatedEmail && (
           <div className="flex justify-between"><span className="font-medium">Email</span><span>{request.generatedEmail}</span></div>
         )}
